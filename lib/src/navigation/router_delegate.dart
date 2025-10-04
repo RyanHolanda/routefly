@@ -68,6 +68,11 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
     final page = route.settings as RouteflyPage;
     page.entity.popCallback?.call(result);
     configurations.removeWhere((e) => e.page.key == page.key);
+
+    if (configurations.last.type != RouteType.push) {
+      setNewRoutePath(configurations.last);
+    }
+
     notifyListeners();
 
     return true;
@@ -90,7 +95,7 @@ class RouteflyRouterDelegate extends RouterDelegate<RouteEntity> //
       configurations = _across(routes);
       currentConfiguration = configuration;
     } else if (configuration.type == RouteType.pushNavigate) {
-      final acrossRoutes = _across(routes);
+      final acrossRoutes = _across(routes).where((e) => e.uri.path != '/');
       configurations.removeWhere(acrossRoutes.contains);
       configurations.addAll(acrossRoutes);
       currentConfiguration = configuration;
