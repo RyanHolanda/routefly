@@ -119,7 +119,14 @@ class RouteEntity {
 
       if (segment.contains('[')) {
         final key = segment.replaceFirst('[', '').replaceFirst(']', '');
-        final value = num.tryParse(segmentCandidate) ?? segmentCandidate;
+
+        final isCandidateNumeric =
+            RegExp(r'^-?\d+(\.\d+)?$').hasMatch(segmentCandidate);
+
+        final value = isCandidateNumeric
+            ? num.tryParse(segmentCandidate) ?? segmentCandidate
+            : segmentCandidate;
+
         params[key] = value;
         continue;
       }

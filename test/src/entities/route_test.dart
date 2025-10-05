@@ -47,4 +47,20 @@ void main() {
 
     expect(newRoute?.params, {'id': 1, 'key': 'text'});
   });
+
+  test('When adding new info, it should not parse hex params into numeric', () {
+    const hexParam = '0x10';
+
+    final route = RouteEntity(
+      uri: Uri.parse('/user/[id]'),
+      routeBuilder: routeBuilder,
+      key: '/user/edit',
+    );
+
+    final newRoute = route.addNewInfo(
+      Uri.parse('/user/$hexParam'),
+    );
+
+    expect(newRoute?.params, {'id': hexParam});
+  });
 }
